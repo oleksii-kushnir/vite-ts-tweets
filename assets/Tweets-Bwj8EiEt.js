@@ -1,4 +1,4 @@
-import{p as A,L as Qe,r as F,j as R}from"./index-D-R0FREJ.js";const Ze=A(Qe)`
+import{p as A,L as Qe,r as F,j as R}from"./index-DKchrWKe.js";const Ze=A(Qe)`
   padding: 8px 16px;
   border-radius: 10px;
   background-color: #471ca9;
