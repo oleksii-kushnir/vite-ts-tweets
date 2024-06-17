@@ -1,4 +1,4 @@
-import{p as A,L as Qe,r as F,j as R}from"./index-DQCNz5se.js";const Ze=A(Qe)`
+import{p as A,L as Qe,r as F,j as R}from"./index-Durqdq7d.js";const Ze=A(Qe)`
   padding: 8px 16px;
   border-radius: 10px;
   background-color: #471ca9;
@@ -45,7 +45,7 @@ import{p as A,L as Qe,r as F,j as R}from"./index-DQCNz5se.js";const Ze=A(Qe)`
   box-shadow: -2.5777px 6.87386px 20.6216px rgba(0, 0, 0, 0.23);
   border-radius: 20px;
   margin-bottom: 15px;
-  background: url('assets/picture2.svg') no-repeat 36px 28px / 308px 168px,
+  background: url('src/assets/picture2.svg') no-repeat 36px 28px / 308px 168px,
     linear-gradient(114.99deg, #471ca9 -0.99%, #5736a3 54.28%, #4b2a99 78.99%);
 `,Fn=A.img`
   position: absolute;
@@ -100,7 +100,7 @@ import{p as A,L as Qe,r as F,j as R}from"./index-DQCNz5se.js";const Ze=A(Qe)`
   font-size: 18px;
   line-height: 22px;
   cursor: pointer;
-`,Dn=({id:e,tweets:t,followers:n,isFirstNewResultIndex:r,followUnfollowUser:s,followedUsers:i})=>{const o=F.useRef(null);return F.useEffect(()=>{var c;o.current&&((c=o.current)==null||c.focus())},[r]),R.jsxs(Ln,{children:[R.jsx(Fn,{src:"assets/Logo.svg",alt:"GoIt_logo"}),R.jsx(_n,{}),R.jsx(Bn,{src:"assets/Boy.svg",alt:"User_photo"}),R.jsxs(kn,{children:[t," TWEETS"]}),R.jsxs(Un,{children:[Number(n).toLocaleString()," FOLLOWERS"]}),R.jsx(jn,{ref:r?o:void 0,type:"button",onClick:()=>s(e),$isFollowing:i.includes(e),children:i.includes(e)?"FOLLOWING":"FOLLOW"})]})},qn=A.button`
+`,Dn=({id:e,tweets:t,followers:n,isFirstNewResultIndex:r,followUnfollowUser:s,followedUsers:i})=>{const o=F.useRef(null);return F.useEffect(()=>{var c;o.current&&((c=o.current)==null||c.focus())},[r]),R.jsxs(Ln,{children:[R.jsx(Fn,{src:"src/assets/Logo.svg",alt:"GoIt_logo"}),R.jsx(_n,{}),R.jsx(Bn,{src:"src/assets/Boy.svg",alt:"User_photo"}),R.jsxs(kn,{children:[t," TWEETS"]}),R.jsxs(Un,{children:[Number(n).toLocaleString()," FOLLOWERS"]}),R.jsx(jn,{ref:r?o:void 0,type:"button",onClick:()=>s(e),$isFollowing:i.includes(e),children:i.includes(e)?"FOLLOWING":"FOLLOW"})]})},qn=A.button`
   padding: 8px 16px;
   border-radius: 10px;
   background-color: #471ca9;
