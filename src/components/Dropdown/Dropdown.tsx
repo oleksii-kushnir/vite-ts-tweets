@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import Select, { ActionMeta, SingleValue, StylesConfig } from 'react-select';
 import type { FollowOption } from '../../types/types';
+import { FilterOptions } from '../../types/types';
 
 export interface DropdownProps {
   onChange: (
@@ -10,9 +11,9 @@ export interface DropdownProps {
 }
 
 const options: readonly FollowOption[] = [
-  { value: 'show all', label: 'Show all' },
-  { value: 'follow', label: 'Follow' },
-  { value: 'followings', label: 'Followings' },
+  { value: FilterOptions.SHOW_ALL, label: 'Show all' },
+  { value: FilterOptions.SHOW_FOLLOW, label: 'Follow' },
+  { value: FilterOptions.SHOW_FOLLOWINGS, label: 'Followings' },
 ];
 
 const customStyles: StylesConfig<FollowOption, false> = {

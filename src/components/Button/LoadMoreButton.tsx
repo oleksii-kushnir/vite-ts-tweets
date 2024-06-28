@@ -1,11 +1,11 @@
 import { FC } from 'react';
-import { ButtonLoadMore } from './Button.styled';
+import { ButtonLoadMore } from './LoadMoreButton.styled';
 
 type Props = {
   onClick: () => void;
 };
 
-export const Button: FC<Props> = ({ onClick }) => {
+export const LoadMoreButton: FC<Props> = ({ onClick }) => {
   return (
     <ButtonLoadMore type='button' onClick={onClick}>
       Load more

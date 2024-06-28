@@ -1,24 +1,35 @@
 import axios from 'axios';
 import type { ITweet } from '../../types/types';
 
-export const AxiosApiServiceGet = async (
+const BASE_URL = 'https://643884021b9a7dd5c952ae92.mockapi.io/api/v1/tweets';
+
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export const axiosApiServiceGet = async (
   page: number,
   abortController: AbortController
 ) => {
-  const url = `https://643884021b9a7dd5c952ae92.mockapi.io/api/v1/tweets?page=${page}&limit=3`;
-  const response = await axios.get(url, { signal: abortController.signal });
+  const url = `?page=${page}&limit=3`;
+  const response = await axiosInstance.get(url, {
+    signal: abortController.signal,
+  });
   return response.data;
 };
 
-export const AxiosApiServicePut = async ({
+export const axiosApiServicePut = async ({
   user,
   tweets,
   followers,
   avatar,
   id,
 }: ITweet) => {
-  const url = `https://643884021b9a7dd5c952ae92.mockapi.io/api/v1/tweets/${id}`;
-  const response = await axios.put(url, {
+  const url = `/${id}`;
+  const response = await axiosInstance.put(url, {
     user,
     tweets,
     followers,

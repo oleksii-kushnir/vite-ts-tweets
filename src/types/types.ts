@@ -1,5 +1,11 @@
+export enum FilterOptions {
+  SHOW_ALL = 'show all',
+  SHOW_FOLLOW = 'follow',
+  SHOW_FOLLOWINGS = 'followings',
+}
+
 export interface FollowOption {
-  readonly value: string;
+  readonly value: FilterOptions;
   readonly label: string;
 }
 

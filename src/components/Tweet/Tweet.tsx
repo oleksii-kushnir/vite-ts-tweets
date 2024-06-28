@@ -8,8 +8,8 @@ import {
   TweetsCount,
   UserImg,
 } from './Tweet.styled';
-import logo from 'src/assets/Logo.svg';
-import boy from 'src/assets/Boy.svg';
+import goit_logo from 'src/assets/goit_logo.svg';
+import user_picture from 'src/assets/user_picture.png';
 
 interface ITweetProps {
   id: string;
@@ -28,19 +28,17 @@ export const Tweet: FC<ITweetProps> = ({
   followUnfollowUser,
   followedUsers,
 }) => {
-  const firstNewResultRef = useRef<HTMLButtonElement>(null);
+  const firstNewResultRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    if (firstNewResultRef.current) {
-      firstNewResultRef.current?.focus();
-    }
-  }, [isFirstNewResultIndex]);
+    firstNewResultRef.current?.focus();
+  }, []);
 
   return (
     <Container>
-      <Logo src={logo} alt='GoIt_logo' />
+      <Logo src={goit_logo} alt='GoIt_logo' />
       <Stripe></Stripe>
-      <UserImg src={boy} alt='User_photo' />
+      <UserImg src={user_picture} alt='User_photo' />
       <TweetsCount>{tweets} TWEETS</TweetsCount>
       <FollowersCount>
         {Number(followers).toLocaleString()} FOLLOWERS

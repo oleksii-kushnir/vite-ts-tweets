@@ -1,18 +1,24 @@
 import { FC, useEffect, useState } from 'react';
 import { Container, LinkToHome, List, MenuCont } from './Tweets.styled';
 import {
-  AxiosApiServiceGet,
-  AxiosApiServicePut,
+  axiosApiServiceGet,
+  axiosApiServicePut,
 } from '../../components/services/AxiosApiService';
 import { Tweet } from '../../components/Tweet/Tweet';
-import { Button } from '../../components/Button/Button';
+import { LoadMoreButton } from '../../components/Button/LoadMoreButton';
 import { Dropdown } from '../../components/Dropdown/Dropdown';
 import { SingleValue } from 'react-select';
 import type { FollowOption, ITweet } from '../../types/types';
+import { FilterOptions } from '../../types/types';
 
 const getFollowedUsers = (): string[] => {
-  const followedUsers = JSON.parse(localStorage.getItem('followed') || '""');
-  return followedUsers ? followedUsers : [];
+  try {
+    const followedUsers = JSON.parse(localStorage.getItem('followed') || '""');
+    return followedUsers || [];
+  } catch (error) {
+    console.error('Failed to parse followed users from localStorage:', error);
+    return [];
+  }
 };
 
 const Tweets: FC = () => {
@@ -20,14 +26,14 @@ const Tweets: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<ITweet[]>([]);
   const [followedUsers, setFollowedUsers] = useState(getFollowedUsers);
-  const [filter, setFilter] = useState<string>('show all');
+  const [filter, setFilter] = useState<FilterOptions>(FilterOptions.SHOW_ALL);
 
   useEffect(() => {
     const abortController = new AbortController();
     const getTweets = async () => {
       try {
         setIsLoading(true);
-        const responseData = await AxiosApiServiceGet(page, abortController);
+        const responseData = await axiosApiServiceGet(page, abortController);
         if (responseData.length > 0) {
           setItems((prevState) => [...prevState, ...responseData]);
         }
@@ -64,7 +70,7 @@ const Tweets: FC = () => {
         )
       );
 
-      await AxiosApiServicePut({
+      await axiosApiServicePut({
         ...user,
         followers: updatedFollowers,
       });
@@ -74,16 +80,16 @@ const Tweets: FC = () => {
   };
 
   const filterChange = (option: SingleValue<FollowOption>) => {
-    setFilter(option?.value || 'show all');
+    setFilter(option?.value || FilterOptions.SHOW_ALL);
   };
 
-  const getVisibleTweets = (filter: string) => {
+  const getVisibleTweets = (filter: FilterOptions) => {
     switch (filter) {
-      case 'show all':
+      case FilterOptions.SHOW_ALL:
         return items;
-      case 'follow':
+      case FilterOptions.SHOW_FOLLOW:
         return items.filter((i) => !followedUsers.includes(i.id));
-      case 'followings':
+      case FilterOptions.SHOW_FOLLOWINGS:
         return items.filter((i) => followedUsers.includes(i.id));
       default:
         return items;
@@ -117,7 +123,7 @@ const Tweets: FC = () => {
               );
             })}
           </List>
-          {items.length % 3 === 0 && <Button onClick={loadMore} />}
+          {items.length % 3 === 0 && <LoadMoreButton onClick={loadMore} />}
         </>
       )}
     </Container>
