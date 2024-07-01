@@ -23,9 +23,13 @@ const getFollowedUsers = (): string[] => {
 
 const Tweets: FC = () => {
   const [page, setPage] = useState<number>(1);
+
+  // const page = useRef<number>(1)
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<ITweet[]>([]);
-  const [followedUsers, setFollowedUsers] = useState(getFollowedUsers);
+  const [followedUsers, setFollowedUsers] =
+    useState<string[]>(getFollowedUsers);
   const [filter, setFilter] = useState<FilterOptions>(FilterOptions.SHOW_ALL);
 
   useEffect(() => {
@@ -48,34 +52,55 @@ const Tweets: FC = () => {
   }, [page]);
 
   useEffect(() => {
-    if (followedUsers)
-      localStorage.setItem('followed', JSON.stringify(followedUsers));
+    const prevFollowedUsers = () => {
+      try {
+        return JSON.parse(localStorage.getItem('followed') || '[]');
+      } catch (error) {
+        console.error(
+          'Failed to parse followed users from localStorage:',
+          error
+        );
+        return [];
+      }
+    };
+
+    if (prevFollowedUsers.toString() !== followedUsers.toString()) {
+      try {
+        localStorage.setItem('followed', JSON.stringify(followedUsers));
+      } catch (error) {
+        console.error(
+          'Failed to parse followed users from localStorage:',
+          error
+        );
+      }
+    }
   }, [followedUsers]);
 
-  const followUnfollowUser = async (userId: string) => {
-    const user = items.find(({ id }) => id === userId) as ITweet;
-    let updatedFollowers: number;
-    try {
-      if (followedUsers.includes(userId)) {
-        const result = followedUsers.filter((id) => id !== userId);
-        setFollowedUsers(result);
-        updatedFollowers = user.followers - 1;
-      } else {
-        setFollowedUsers((prevState) => [...prevState, userId]);
-        updatedFollowers = user.followers + 1;
+  const toggleUserState = async (userId: string) => {
+    const user: ITweet | undefined = items.find(({ id }) => id === userId);
+    if (user) {
+      let newFollowerCount: number;
+      try {
+        if (followedUsers.includes(userId)) {
+          const result = followedUsers.filter((id) => id !== userId);
+          setFollowedUsers(result);
+          newFollowerCount = user.followers - 1;
+        } else {
+          setFollowedUsers((prevState) => [...prevState, userId]);
+          newFollowerCount = user.followers + 1;
+        }
+        setItems((prevState) =>
+          prevState.map((i) =>
+            i.id === userId ? { ...i, followers: newFollowerCount } : i
+          )
+        );
+        await axiosApiServicePut({
+          ...user,
+          followers: newFollowerCount,
+        });
+      } catch (error) {
+        console.log(`IsError: ${error}`);
       }
-      setItems(
-        items.map((i) =>
-          i.id === userId ? { ...i, followers: updatedFollowers } : i
-        )
-      );
-
-      await axiosApiServicePut({
-        ...user,
-        followers: updatedFollowers,
-      });
-    } catch (error) {
-      console.log(`IsError: ${error}`);
     }
   };
 
@@ -83,7 +108,7 @@ const Tweets: FC = () => {
     setFilter(option?.value || FilterOptions.SHOW_ALL);
   };
 
-  const getVisibleTweets = (filter: FilterOptions) => {
+  const getVisibleTweets = () => {
     switch (filter) {
       case FilterOptions.SHOW_ALL:
         return items;
@@ -109,7 +134,7 @@ const Tweets: FC = () => {
             <Dropdown onChange={filterChange} />
           </MenuCont>
           <List>
-            {getVisibleTweets(filter).map(({ tweets, followers, id }, i) => {
+            {getVisibleTweets().map(({ tweets, followers, id }, i) => {
               return (
                 <Tweet
                   id={id}
@@ -117,9 +142,9 @@ const Tweets: FC = () => {
                   tweets={tweets}
                   followers={followers}
                   isFirstNewResultIndex={i === items.length - 3}
-                  followUnfollowUser={followUnfollowUser}
+                  toggleUserState={toggleUserState}
                   followedUsers={followedUsers}
-                ></Tweet>
+                />
               );
             })}
           </List>

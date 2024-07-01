@@ -16,7 +16,7 @@ interface ITweetProps {
   tweets: number;
   followers: number;
   isFirstNewResultIndex: boolean;
-  followUnfollowUser: (id: string) => void;
+  toggleUserState: (id: string) => void;
   followedUsers: string[];
 }
 
@@ -25,7 +25,7 @@ export const Tweet: FC<ITweetProps> = ({
   tweets,
   followers,
   isFirstNewResultIndex,
-  followUnfollowUser,
+  toggleUserState,
   followedUsers,
 }) => {
   const firstNewResultRef = useRef<HTMLButtonElement | null>(null);
@@ -46,7 +46,7 @@ export const Tweet: FC<ITweetProps> = ({
       <FollowButton
         ref={isFirstNewResultIndex ? firstNewResultRef : undefined}
         type='button'
-        onClick={() => followUnfollowUser(id)}
+        onClick={() => toggleUserState(id)}
         $isFollowing={followedUsers.includes(id)}
       >
         {followedUsers.includes(id) ? 'FOLLOWING' : 'FOLLOW'}
