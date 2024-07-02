@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { ITweet } from '../../types/types';
+import type { ITweet } from '@/types/types';
 
 const BASE_URL = 'https://643884021b9a7dd5c952ae92.mockapi.io/api/v1/tweets';
 

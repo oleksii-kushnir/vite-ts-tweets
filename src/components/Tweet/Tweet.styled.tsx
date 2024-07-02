@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import background_image from 'src/assets/background_image.png';
+import background_image from '@/assets/background_image.png';
 
 interface FollowButtonProps {
   $isFollowing: boolean;

@@ -3,13 +3,13 @@ import { Container, LinkToHome, List, MenuCont } from './Tweets.styled';
 import {
   axiosApiServiceGet,
   axiosApiServicePut,
-} from '../../components/services/AxiosApiService';
-import { Tweet } from '../../components/Tweet/Tweet';
-import { LoadMoreButton } from '../../components/Button/LoadMoreButton';
-import { Dropdown } from '../../components/Dropdown/Dropdown';
+} from '@/components/services/AxiosApiService';
+import { Tweet } from '@/components/Tweet/Tweet';
+import { LoadMoreButton } from '@/components/Button/LoadMoreButton';
+import { Dropdown } from '@/components/Dropdown/Dropdown';
 import { SingleValue } from 'react-select';
-import type { FollowOption, ITweet } from '../../types/types';
-import { FilterOptions } from '../../types/types';
+import { FilterOptions } from '@/types/types';
+import type { FollowOption, ITweet } from '@/types/types';
 
 const getFollowedUsers = (): string[] => {
   try {
@@ -23,11 +23,9 @@ const getFollowedUsers = (): string[] => {
 
 const Tweets: FC = () => {
   const [page, setPage] = useState<number>(1);
-
-  // const page = useRef<number>(1)
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<ITweet[]>([]);
+  const [hasMoreItems, setHasMoreItems] = useState<boolean>(true);
   const [followedUsers, setFollowedUsers] =
     useState<string[]>(getFollowedUsers);
   const [filter, setFilter] = useState<FilterOptions>(FilterOptions.SHOW_ALL);
@@ -40,9 +38,12 @@ const Tweets: FC = () => {
         const responseData = await axiosApiServiceGet(page, abortController);
         if (responseData.length > 0) {
           setItems((prevState) => [...prevState, ...responseData]);
+          responseData.length < 3
+            ? setHasMoreItems(false)
+            : setHasMoreItems(true);
         }
       } catch (error) {
-        console.log(`IsError: ${error}`);
+        console.error(`IsError: ${error}`);
       } finally {
         setIsLoading(false);
       }
@@ -99,7 +100,7 @@ const Tweets: FC = () => {
           followers: newFollowerCount,
         });
       } catch (error) {
-        console.log(`IsError: ${error}`);
+        console.error(`IsError: ${error}`);
       }
     }
   };
@@ -113,9 +114,9 @@ const Tweets: FC = () => {
       case FilterOptions.SHOW_ALL:
         return items;
       case FilterOptions.SHOW_FOLLOW:
-        return items.filter((i) => !followedUsers.includes(i.id));
+        return items.filter((tweet) => !followedUsers.includes(tweet.id));
       case FilterOptions.SHOW_FOLLOWINGS:
-        return items.filter((i) => followedUsers.includes(i.id));
+        return items.filter((tweet) => followedUsers.includes(tweet.id));
       default:
         return items;
     }
@@ -127,30 +128,27 @@ const Tweets: FC = () => {
 
   return (
     <Container>
-      {!isLoading && items && (
-        <>
-          <MenuCont>
-            <LinkToHome to='/'>Back</LinkToHome>
-            <Dropdown onChange={filterChange} />
-          </MenuCont>
-          <List>
-            {getVisibleTweets().map(({ tweets, followers, id }, i) => {
-              return (
-                <Tweet
-                  id={id}
-                  key={id}
-                  tweets={tweets}
-                  followers={followers}
-                  isFirstNewResultIndex={i === items.length - 3}
-                  toggleUserState={toggleUserState}
-                  followedUsers={followedUsers}
-                />
-              );
-            })}
-          </List>
-          {items.length % 3 === 0 && <LoadMoreButton onClick={loadMore} />}
-        </>
-      )}
+      <MenuCont>
+        <LinkToHome to='/'>Back</LinkToHome>
+        <Dropdown onChange={filterChange} />
+      </MenuCont>
+      <List>
+        {items.length > 0 &&
+          getVisibleTweets().map(({ tweets, followers, id }) => {
+            return (
+              <Tweet
+                key={id}
+                id={id}
+                tweets={tweets}
+                followers={followers}
+                toggleUserState={toggleUserState}
+                followedUsers={followedUsers}
+              />
+            );
+          })}
+      </List>
+      {isLoading && <p>Loading...</p>}
+      {!isLoading && hasMoreItems && <LoadMoreButton onClick={loadMore} />}
     </Container>
   );
 };
