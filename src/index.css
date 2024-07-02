@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: 'Montserrat';
-  src: url('src/assets/Montserrat-VariableFont_wght.ttf');
+  src: url('@/assets/Montserrat-VariableFont_wght.ttf');
 }
 
 body {
