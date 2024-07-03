@@ -23,6 +23,7 @@ const getFollowedUsers = (): string[] => {
 
 const Tweets: FC = () => {
   const pageRef = useRef<number>(1);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<ITweet[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState<boolean>(true);
@@ -31,10 +32,13 @@ const Tweets: FC = () => {
   const [filter, setFilter] = useState<FilterOptions>(FilterOptions.SHOW_ALL);
 
   const fetchTweets = async (page: number, append: boolean = true) => {
-    const abortController = new AbortController();
+    abortControllerRef.current = new AbortController();
     try {
       setIsLoading(true);
-      const responseData = await axiosApiServiceGet(page, abortController);
+      const responseData = await axiosApiServiceGet(
+        page,
+        abortControllerRef.current.signal
+      );
       if (responseData.length > 0) {
         setItems((prevState) =>
           append ? [...prevState, ...responseData] : responseData
@@ -46,11 +50,13 @@ const Tweets: FC = () => {
     } finally {
       setIsLoading(false);
     }
-    return () => abortController.abort();
   };
 
   useEffect(() => {
     fetchTweets(pageRef.current, false);
+    return () => {
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+    };
   }, []);
 
   useEffect(() => {

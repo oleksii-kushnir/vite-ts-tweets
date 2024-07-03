@@ -10,14 +10,9 @@ const axiosInstance = axios.create({
   },
 });
 
-export const axiosApiServiceGet = async (
-  page: number,
-  abortController: AbortController
-) => {
+export const axiosApiServiceGet = async (page: number, signal: AbortSignal) => {
   const url = `?page=${page}&limit=3`;
-  const response = await axiosInstance.get(url, {
-    signal: abortController.signal,
-  });
+  const response = await axiosInstance.get(url, { signal });
   return response.data;
 };
 
