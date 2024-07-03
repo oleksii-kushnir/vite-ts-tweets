@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Container, LinkToHome, List, MenuCont } from './Tweets.styled';
 import {
   axiosApiServiceGet,
@@ -22,7 +22,7 @@ const getFollowedUsers = (): string[] => {
 };
 
 const Tweets: FC = () => {
-  const [page, setPage] = useState<number>(1);
+  const pageRef = useRef<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [items, setItems] = useState<ITweet[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState<boolean>(true);
@@ -30,27 +30,28 @@ const Tweets: FC = () => {
     useState<string[]>(getFollowedUsers);
   const [filter, setFilter] = useState<FilterOptions>(FilterOptions.SHOW_ALL);
 
-  useEffect(() => {
+  const fetchTweets = async (page: number, append: boolean = true) => {
     const abortController = new AbortController();
-    const getTweets = async () => {
-      try {
-        setIsLoading(true);
-        const responseData = await axiosApiServiceGet(page, abortController);
-        if (responseData.length > 0) {
-          setItems((prevState) => [...prevState, ...responseData]);
-          responseData.length < 3
-            ? setHasMoreItems(false)
-            : setHasMoreItems(true);
-        }
-      } catch (error) {
-        console.error(`IsError: ${error}`);
-      } finally {
-        setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const responseData = await axiosApiServiceGet(page, abortController);
+      if (responseData.length > 0) {
+        setItems((prevState) =>
+          append ? [...prevState, ...responseData] : responseData
+        );
+        setHasMoreItems(responseData.length >= 3);
       }
-    };
-    getTweets();
+    } catch (error) {
+      console.error(`IsError: ${error}`);
+    } finally {
+      setIsLoading(false);
+    }
     return () => abortController.abort();
-  }, [page]);
+  };
+
+  useEffect(() => {
+    fetchTweets(pageRef.current, false);
+  }, []);
 
   useEffect(() => {
     const prevFollowedUsers = () => {
@@ -123,7 +124,8 @@ const Tweets: FC = () => {
   };
 
   const loadMore = () => {
-    setPage((prevState) => prevState + 1);
+    pageRef.current += 1;
+    fetchTweets(pageRef.current);
   };
 
   return (
