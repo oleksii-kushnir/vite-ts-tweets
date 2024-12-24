@@ -8,9 +8,9 @@
 
 > This project implements tweet cards with interactive functionality when clicking the button. Using this application, users can follow other users, changing the follower count and the button state from &#34;Follow&#34; to &#34;Following&#34; and vice versa. User actions are preserved even after the page is refreshed.
 
-### 🏠 [Homepage](https://github.com/Alexey-Kushnir/vite-ts-tweets)
+### 🏠 [Homepage](https://github.com/oleksii-kushnir/vite-ts-tweets)
 
-### ✨ [Demo](https://alexey-kushnir.github.io/vite-ts-tweets/)
+### ✨ [Demo](https://oleksii-kushnir.github.io/vite-ts-tweets/)
 
 ### ✨ [Prerequisites]
 
@@ -20,7 +20,7 @@ node >= 9.3.0
 ## Install
 
 ```sh
-git clone https://github.com/Alexey-Kushnir/vite-ts-tweets.git
+git clone https://github.com/oleksii-kushnir/vite-ts-tweets.git
 cd vite-ts-tweets
 npm install
 ```
@@ -35,7 +35,7 @@ npm run deploy
 
 👤 **Alex Kushnir**
 
-- Github: [@Alexey-Kushnir](https://github.com/Alexey-Kushnir)
+- Github: [@oleksii-kushnir(https://github.com/oleksii-kushnir)
 
 ## Show your support
 
