@@ -2,7 +2,7 @@
   "name": "vite-ts-tweets",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://github.com/Alexey-Kushnir/vite-ts-tweets",
+  "homepage": "https://github.com/oleksii-kushnir/vite-ts-tweets",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
