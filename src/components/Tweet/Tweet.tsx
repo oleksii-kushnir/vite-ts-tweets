@@ -23,7 +23,6 @@ export const Tweet: FC<ITweetProps> = ({
   id,
   tweets,
   followers,
-
   toggleUserState,
   followedUsers,
 }) => {
@@ -39,8 +38,7 @@ export const Tweet: FC<ITweetProps> = ({
       <FollowButton
         type='button'
         onClick={() => toggleUserState(id)}
-        $isFollowing={followedUsers.includes(id)}
-      >
+        $isFollowing={followedUsers.includes(id)}>
         {followedUsers.includes(id) ? 'FOLLOWING' : 'FOLLOW'}
       </FollowButton>
     </Container>

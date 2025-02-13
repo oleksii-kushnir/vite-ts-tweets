@@ -142,18 +142,16 @@ const Tweets: FC = () => {
       </MenuCont>
       <List>
         {items.length > 0 &&
-          getVisibleTweets().map(({ tweets, followers, id }) => {
-            return (
-              <Tweet
-                key={id}
-                id={id}
-                tweets={tweets}
-                followers={followers}
-                toggleUserState={toggleUserState}
-                followedUsers={followedUsers}
-              />
-            );
-          })}
+          getVisibleTweets().map(({ tweets, followers, id }) => (
+            <Tweet
+              key={id}
+              id={id}
+              tweets={tweets}
+              followers={followers}
+              toggleUserState={toggleUserState}
+              followedUsers={followedUsers}
+            />
+          ))}
       </List>
       {isLoading && <p>Loading...</p>}
       {!isLoading && hasMoreItems && <LoadMoreButton onClick={loadMore} />}
