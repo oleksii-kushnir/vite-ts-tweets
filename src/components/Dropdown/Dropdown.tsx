@@ -1,11 +1,15 @@
-import { FC } from 'react';
-import Select, { ActionMeta, SingleValue, StylesConfig } from 'react-select';
+import { type FC } from 'react';
+import Select, {
+  type ActionMeta,
+  type SingleValue,
+  type StylesConfig,
+} from 'react-select';
 import type { FollowOption } from '@/types/types';
 import { FilterOptions } from '@/types/types';
 
 export interface DropdownProps {
   onChange: (
-    option: SingleValue<FollowOption> | null,
+    option: SingleValue<FollowOption>,
     actionMeta: ActionMeta<FollowOption>
   ) => void;
 }

@@ -33,9 +33,9 @@ npm run deploy
 
 ## Author
 
-👤 **Alex Kushnir**
+👤 **Oleksii Kushnir**
 
-- Github: [@oleksii-kushnir(https://github.com/oleksii-kushnir)
+- Github: [@oleksii-kushnir](https://github.com/oleksii-kushnir)
 
 ## Show your support
 

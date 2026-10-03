@@ -7,14 +7,21 @@ import {
 import { Tweet } from '@/components/Tweet/Tweet';
 import { LoadMoreButton } from '@/components/Button/LoadMoreButton';
 import { Dropdown } from '@/components/Dropdown/Dropdown';
-import { SingleValue } from 'react-select';
+import type { SingleValue } from 'react-select';
 import { FilterOptions } from '@/types/types';
 import type { FollowOption, ITweet } from '@/types/types';
 
+const FOLLOWED_USERS_STORAGE_KEY = 'followed';
+
+const isStringArray = (value: unknown): value is string[] =>
+  Array.isArray(value) && value.every((item) => typeof item === 'string');
+
 const getFollowedUsers = (): string[] => {
   try {
-    const followedUsers = JSON.parse(localStorage.getItem('followed') || '""');
-    return followedUsers || [];
+    const storedValue: unknown = JSON.parse(
+      localStorage.getItem(FOLLOWED_USERS_STORAGE_KEY) ?? '[]'
+    );
+    return isStringArray(storedValue) ? storedValue : [];
   } catch (error) {
     console.error('Failed to parse followed users from localStorage:', error);
     return [];
@@ -31,7 +38,10 @@ const Tweets: FC = () => {
     useState<string[]>(getFollowedUsers);
   const [filter, setFilter] = useState<FilterOptions>(FilterOptions.SHOW_ALL);
 
-  const fetchTweets = async (page: number, append: boolean = true) => {
+  const fetchTweets = async (
+    page: number,
+    append: boolean = true
+  ): Promise<void> => {
     abortControllerRef.current = new AbortController();
     try {
       setIsLoading(true);
@@ -60,21 +70,14 @@ const Tweets: FC = () => {
   }, []);
 
   useEffect(() => {
-    const prevFollowedUsers = () => {
-      try {
-        return JSON.parse(localStorage.getItem('followed') || '[]');
-      } catch (error) {
-        console.error(
-          'Failed to parse followed users from localStorage:',
-          error
-        );
-        return [];
-      }
-    };
+    const previousFollowedUsers = getFollowedUsers();
 
-    if (prevFollowedUsers.toString() !== followedUsers.toString()) {
+    if (previousFollowedUsers.toString() !== followedUsers.toString()) {
       try {
-        localStorage.setItem('followed', JSON.stringify(followedUsers));
+        localStorage.setItem(
+          FOLLOWED_USERS_STORAGE_KEY,
+          JSON.stringify(followedUsers)
+        );
       } catch (error) {
         console.error(
           'Failed to parse followed users from localStorage:',
@@ -84,7 +87,7 @@ const Tweets: FC = () => {
     }
   }, [followedUsers]);
 
-  const toggleUserState = async (userId: string) => {
+  const toggleUserState = async (userId: string): Promise<void> => {
     const user: ITweet | undefined = items.find(({ id }) => id === userId);
     if (user) {
       let newFollowerCount: number;
@@ -112,11 +115,11 @@ const Tweets: FC = () => {
     }
   };
 
-  const filterChange = (option: SingleValue<FollowOption>) => {
+  const filterChange = (option: SingleValue<FollowOption>): void => {
     setFilter(option?.value || FilterOptions.SHOW_ALL);
   };
 
-  const getVisibleTweets = () => {
+  const getVisibleTweets = (): ITweet[] => {
     switch (filter) {
       case FilterOptions.SHOW_ALL:
         return items;
@@ -129,7 +132,7 @@ const Tweets: FC = () => {
     }
   };
 
-  const loadMore = () => {
+  const loadMore = (): void => {
     pageRef.current += 1;
     fetchTweets(pageRef.current);
   };

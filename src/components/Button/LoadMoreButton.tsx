@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { type FC, type MouseEventHandler } from 'react';
 import { ButtonLoadMore } from './LoadMoreButton.styled';
 
-type Props = {
-  onClick: () => void;
-};
+interface LoadMoreButtonProps {
+  onClick: MouseEventHandler<HTMLButtonElement>;
+}
 
-export const LoadMoreButton: FC<Props> = ({ onClick }) => {
+export const LoadMoreButton: FC<LoadMoreButtonProps> = ({ onClick }) => {
   return (
     <ButtonLoadMore type='button' onClick={onClick}>
       Load more

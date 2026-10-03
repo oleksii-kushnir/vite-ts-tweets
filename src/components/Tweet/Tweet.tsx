@@ -11,15 +11,15 @@ import {
 import goit_logo from '@/assets/goit_logo.svg';
 import user_picture from '@/assets/user_picture.png';
 
-interface ITweetProps {
+interface TweetProps {
   id: string;
   tweets: number;
   followers: number;
-  toggleUserState: (id: string) => void;
-  followedUsers: string[];
+  toggleUserState: (id: string) => Promise<void>;
+  followedUsers: readonly string[];
 }
 
-export const Tweet: FC<ITweetProps> = ({
+export const Tweet: FC<TweetProps> = ({
   id,
   tweets,
   followers,
